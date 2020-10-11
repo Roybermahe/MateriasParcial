@@ -103,7 +103,8 @@ public class detalleMateria extends AppCompatActivity {
         for(ActividadModel item: listaActividad) {
             total = total + item.Percent;
         }
-        return total >= 100;
+        total = total + Integer.parseInt(percent.getText().toString().trim());
+        return total > 100;
     }
 
     private void guardarMateria(){
@@ -186,17 +187,21 @@ public class detalleMateria extends AppCompatActivity {
     public void borrarActividad(View view) {
         this.deleteActividad();
         this.displayDatabaseInfo();
+        clearView();
     }
 
     public void actualizarActvidad(View view) {
         String name = nombreActividad.getText().toString().trim();
         Integer percentActividad = Integer.parseInt(percent.getText().toString().trim());
+        int anterior = listaActividad.get(positionEdit).Percent;
         listaActividad.get(positionEdit).Percent = 0;
         if(percentMayorQueCien() || percentActividad > 100) {
             Toast.makeText(this, "porcentaje mayor a 100%", Toast.LENGTH_SHORT).show();
+            listaActividad.get(positionEdit).Percent = anterior;
         }
         else if (name.length() == 0) {
             Toast.makeText(this, "falta el nombre de la actividad", Toast.LENGTH_SHORT).show();
+            listaActividad.get(positionEdit).Percent = anterior;
         }
         else {
             actualizarActividadEnDb();
